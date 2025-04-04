@@ -1,0 +1,11 @@
+.DS_Store
+.vagrant
+.idea
+
+# tags
+v*
+R-*
+2*
+
+*dump*
+ubuntu*
