@@ -100,7 +100,7 @@ $PIPPATH install --upgrade uwsgi
 
 if [[ "$3" == 'vagrant' ]]; then
     # webserver
-    # curl -fsSLk https://github/install-nginx.sh | sudo bash -s -- web2py80
+    curl -fsSLk https://github.com/santosleonardo/web2py_dev/raw/refs/heads/main/install-nginx.sh | sudo bash -s -- web2py80
 
     # Install and configure Brazilian locale for local postgresql
     locale-gen pt_BR.UTF-8
@@ -133,15 +133,15 @@ if [[ "$3" == 'vagrant' ]]; then
     
     # Create symbolic link for better use with vagrant
     if [[ -n "$4" ]]; then
-        mkdir -p /vagrant/"$4"
-        ln -fs /vagrant/"$4" /home/www-data
+        mkdir -p "/vagrant/$4"
+        ln -fs "/vagrant/$4" /home/www-data
     else
         mkdir /vagrant/ambiente
         ln -fs /vagrant/ambiente /home/www-data
     fi
 else
     # webserver
-    # curl -fsSLk https://github/install-nginx.sh | sudo bash
+    curl -fsSLk https://github.com/santosleonardo/web2py_dev/raw/refs/heads/main/install-nginx.sh | sudo bash
     
     mkdir /home/www-data    
 fi
@@ -154,40 +154,23 @@ if [[ ! -d /home/www-data/web2py ]]; then
         wget https://github.com/web2py/web2py/raw/refs/heads/master/binaries/web2py_src.zip
         unzip -q web2py_src.zip
     else
-        git clone --recursive ${WEB2PY_REPO_URL}.git web2py
-        
-        cd web2py || exit
-
-        git config --global --add safe.directory '/home/www-data'
-        if [[ "$3" == 'vagrant' ]]; then
-            git config --global --add safe.directory '/vagrant'
-        fi
-        
-        # validate if tag exists
-        if [[ "$(git tag -l "$2" | wc -l)" -eq 1 ]]; then
-            WEB2PY_GIT_TAG=$2
+        WEB2PY_GIT_TAG=$2
+        git config --global --add safe.directory '*'
+        git config --system --add safe.directory '*'
+        if git clone --recursive ${WEB2PY_REPO_URL}.git --branch "$WEB2PY_GIT_TAG" --single-branch web2py
+        then
+            echo ""
+            echo "web2by $WEB2PY_GIT_TAG downloaded"
+            echo ""
         else
             echo ""
-            echo "Tag $2 inválida."
-            echo "Verifique a lista em ${WEB2PY_REPO_URL}/tags"
+            echo "Invalid tag"
+            echo "Check list in ${WEB2PY_REPO_URL}/tags"
             echo ""
             rm -rf /home/www-data
+            rm -rf "/vagrant/${WEB2PY_GIT_TAG}/web2py"
             exit 1
         fi
-        
-        # change to selected tag
-        if [[ -n "$4" ]]; then
-            git checkout tags/"$WEB2PY_GIT_TAG" -b "$4"
-        else
-            git checkout tags/"$WEB2PY_GIT_TAG" -b ambiente-"$WEB2PY_GIT_TAG"
-        fi
-        
-        # update submodules to match selected tag
-        if [[ -f .gitmodules ]]; then
-            git submodule update
-        fi
-
-        cd ..
     fi
     
     cp /home/www-data/web2py/handlers/wsgihandler.py /home/www-data/web2py/
