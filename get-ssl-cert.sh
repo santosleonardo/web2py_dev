@@ -17,7 +17,7 @@ fi
 
 # certbot
 if [[ $(command -v certbot | wc -l) -eq 0 ]]; then
-    wget --no-check-certificate -qO- https://git.unirio.br/shell/bash/-/raw/main/install-certbot.sh | sudo bash
+    curl -fsSLk https://github.com/santosleonardo/web2py_dev/raw/refs/heads/main/install-certbot.sh | sudo bash
 fi
 
 # HTTP
