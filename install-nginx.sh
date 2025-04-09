@@ -58,6 +58,9 @@ proxy_set_header X-Forwarded-Proto $scheme;
 ' > /etc/nginx/proxy_params
 fi
 
+# certbot
+curl -fsSLk https://github.com/santosleonardo/web2py_dev/raw/refs/heads/main/install-certbot.sh | sudo bash
+
 if [[ -f "/etc/nginx/conf.d/default.conf" ]]
 then
     mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.disabled
