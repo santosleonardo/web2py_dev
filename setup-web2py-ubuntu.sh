@@ -63,13 +63,13 @@ export DEBIAN_FRONTEND=noninteractive
 
 OS_USER=www-data
 
-# limites para o usuario do framework
-echo "
-${OS_USER}    hard    nofile  10000
-${OS_USER}    soft    nofile  4000
-${OS_USER}    hard    nproc   4096
-${OS_USER}    soft    nproc   1024
-"> /etc/security/limits.d/${OS_USER}.conf
+# limits to framework user
+# echo "
+# ${OS_USER}    hard    nofile  10000
+# ${OS_USER}    soft    nofile  4000
+# ${OS_USER}    hard    nproc   4096
+# ${OS_USER}    soft    nproc   1024
+# " > /etc/security/limits.d/${OS_USER}.conf
 
 # OS Upgrade
 apt-get update
@@ -129,7 +129,7 @@ if [[ "$3" == 'vagrant' ]]; then
     systemctl restart postgresql.service
 
     # Make vagrant user member of group www-data
-    usermod -aG www-data vagrant
+    gpasswd -a vagrant www-data
     
     # Create symbolic link for better use with vagrant
     if [[ -n "$4" ]]; then
@@ -143,7 +143,17 @@ else
     # webserver
     curl -fsSLk https://github.com/santosleonardo/web2py_dev/raw/refs/heads/main/install-nginx.sh | sudo bash
     
-    mkdir /home/www-data    
+    mkdir -p /home/www-data
+    # write permission to group
+    chmod -R g+w /home/www-data
+    # setgid on dir
+    chmod g+s /home/www-data
+    # umask to users of group
+    echo "
+# Set umask for www-data members
+if groups | grep -qw www-data; then
+    umask 0002
+fi" > /etc/profile.d/set_umask_www-data.sh
 fi
 
 # Dowload Web2py, set version and admin password
