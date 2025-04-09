@@ -94,9 +94,8 @@ apt-get -y install \
 # launchpadlib requisite
 pip3 install testresources
 
-pip3 install setuptools --no-binary :all: --upgrade
-PIPPATH=$(which pip3)
-$PIPPATH install --upgrade uwsgi
+pip3 install --upgrade setuptools
+pip3 install --upgrade uwsgi
 
 if [[ "$3" == 'vagrant' ]]; then
     # webserver
