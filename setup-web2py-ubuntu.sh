@@ -184,6 +184,8 @@ if [[ ! -d /home/www-data/web2py ]]; then
     
     cp /home/www-data/web2py/handlers/wsgihandler.py /home/www-data/web2py/
     chown -R www-data:www-data /home/www-data/web2py
+    # write permission to group
+    chmod -R g+w /home/www-data/web2py
 
     cd /home/www-data/web2py || exit
     # Set web2py initial admin password
