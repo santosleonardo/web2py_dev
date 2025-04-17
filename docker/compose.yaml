@@ -30,8 +30,8 @@ services:
       - postgres
     environment:
       - POSTGRES_HOST=postgres
-    volumes:
-      - ./web2py:/opt/web2py
+    # volumes:
+    #   - ./web2py:/opt/web2py
     ports:
       - '80:80'
 
