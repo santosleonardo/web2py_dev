@@ -11,3 +11,6 @@ R-*
 ubuntu*
 
 !Vagrantfile
+
+web2py*
+postgres*

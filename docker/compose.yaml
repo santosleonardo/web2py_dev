@@ -1,0 +1,40 @@
+name: web2py-dev-jammy
+
+services:
+  postgres:
+    image: 'postgres:16'
+    environment:
+      - POSTGRES_PASSWORD=dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  get-web2py:
+    build:
+      context: ./get-web2py
+      dockerfile: Dockerfile
+    volumes:
+      - ./web2py:/opt/web2py
+    entrypoint: ["/bin/sh", "/get-web2py.sh"]
+    depends_on: []
+    restart: no
+    
+
+  uwsgi-nginx:
+    build:
+      context: ./uwsgi-nginx
+      dockerfile: Dockerfile
+    depends_on:
+      - get-web2py
+      - postgres
+    environment:
+      - POSTGRES_HOST=postgres
+    volumes:
+      - ./web2py:/opt/web2py
+    ports:
+      - '80:80'
+
+volumes:
+  postgres_data:
+    driver: local
