@@ -1,40 +1,38 @@
-name: web2py-dev-jammy
+name: web2py-dev
 
 services:
   postgres:
     image: 'postgres:16'
+    container_name: pg16
     environment:
       - POSTGRES_PASSWORD=dev
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-
-  get-web2py:
-    build:
-      context: ./get-web2py
-      dockerfile: Dockerfile
-    volumes:
-      - ./web2py:/opt/web2py
-    entrypoint: ["/bin/sh", "/get-web2py.sh"]
-    depends_on: []
-    restart: no
     
-
-  uwsgi-nginx:
+  web2py:
     build:
-      context: ./uwsgi-nginx
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: web2py.Dockerfile
+    container_name: web2py
     depends_on:
-      - get-web2py
-      - postgres
+      postgres:
+        condition: service_started
     environment:
       - POSTGRES_HOST=postgres
-    # volumes:
-    #   - ./web2py:/opt/web2py
+    volumes:
+      - web2py:/opt/web2py
+      - vscode-server:/root/.vscode-server
     ports:
       - '80:80'
+      - '443:443'
+      - '8000:8000'
 
 volumes:
   postgres_data:
+    driver: local
+  web2py:
+    driver: local
+  vscode-server:
     driver: local

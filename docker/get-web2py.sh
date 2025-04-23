@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ -z "$(ls -A /web2py 2>/dev/null)" ]; then
-    echo "📁 Pasta /web2py está vazia. Populando conteúdo..."
+if [ -z "$(ls -A /opt/web2py 2>/dev/null)" ]; then
+    echo "📁 Pasta /opt/web2py está vazia. Populando conteúdo..."
     wget -P /tmp -c http://web2py.com/examples/static/web2py_src.zip
     unzip -q -o /tmp/web2py_src.zip -d /opt
     rm -rf /opt/web2py/applications/examples

@@ -13,4 +13,9 @@ ubuntu*
 !Vagrantfile
 
 web2py*
+!web2py.Dockerfile
+!web2py.conf
+
 postgres*
+
+*.log
