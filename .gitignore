@@ -19,3 +19,7 @@ web2py*
 postgres*
 
 *.log
+
+# docker
+!*.compose.yaml
+!*.Dockerfile

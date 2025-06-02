@@ -1,0 +1,29 @@
+include:
+  - pg16.compose.yaml
+
+name: web2py
+
+services:
+  v2-dev:
+    container_name: v2-dev
+    build:
+      context: .
+      dockerfile: v2.Dockerfile
+    depends_on:
+      - pg16-dev
+    environment:
+      - POSTGRES_HOST=pg16-dev
+    volumes:
+      - ./v2-dev:/opt/web2py
+      - site-packages-v2-dev:/usr/local/lib/python2.7/site-packages
+      - vscode-server-v2-dev:/root/.vscode-server
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8000:8000'
+
+volumes:
+  site-packages-v2-dev:
+    driver: local
+  vscode-server-v2-dev:
+    driver: local

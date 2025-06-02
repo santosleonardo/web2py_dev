@@ -1,0 +1,14 @@
+services:
+  pg16-dev:
+    container_name: pg16-dev
+    image: 'postgres:16'
+    environment:
+      - POSTGRES_PASSWORD=dev
+    volumes:
+      - pg16-dev:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  pg16-dev:
+    driver: local
