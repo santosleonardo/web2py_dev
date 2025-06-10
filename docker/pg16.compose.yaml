@@ -1,7 +1,9 @@
 services:
   pg16-dev:
     container_name: pg16-dev
-    image: 'postgres:16'
+    build:
+      context: .
+      dockerfile: pg16.Dockerfile
     environment:
       - POSTGRES_PASSWORD=dev
     volumes:
